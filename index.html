@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-3.3.1.js"></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="tit">
+            <h2>点击图片查看效果</h2>
+            <div class="img"><img src="img/0.jpg" alt=""></div>
+        </div>
+    </div>
+
+    <div class="mark">
+        <div class="mark_1">
+            <div class="title">
+                <span>查看大图</span><span>×</span>
+            </div>
+            <div class="content">
+                <ul class="left">
+                    <li><img src="img/0.jpg" alt=""></li>
+                    <ol class="btn">
+                        <li> < </li>
+                        <li> > </li>
+                    </ol>
+                </ul>
+                <div class="right">
+                    <h2>图片信息 mou</h2>
+                    <ol class="imgList">
+
+                    </ol>
+                    <form>
+                        <button type="button"> < </button>
+                        <span>1/2</span>
+                        <button type="button"> > </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script>
+		$(function(){
+
+			function Img(){
+				//创建一个数组,存储源数据
+				this.img_data = ["img/0.jpg","img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg","img/5.jpg","img/6.jpg","img/7.jpg","img/8.jpg","img/9.jpg","img/10.jpg","img/11.jpg","img/12.jpg","img/13.jpg","img/14.jpg","img/15.jpg","img/16.jpg","img/17.jpg"];
+				//表示的是当前显示图片的下标
+				this.img_index = 0;	
+
+				//每页显示多少张图片
+				this.img_pageCount = 8;
+
+				//一共显示多少页
+				this.page_count = Math.ceil( this.img_data.length / this.img_pageCount );
+
+				//当前显示的图片的页数
+				this.page_index = 0;
+
+				this.init();
+			}
+			Img.prototype = {
+				constructor : Img,
+				init : function(){
+					this.bindEvent();
+					//找到 当前页的图片
+					var arr = this.filterData(this.page_index);
+					this.render(arr);
+				},
+				bindEvent : function(){
+					this.maskShow();
+					this.maskClick();
+				},
+				maskShow : function(){
+					$(".img img").click(function(){
+						$(".mark").show();
+					});
+				},
+				//遮罩层里按钮点击方法
+				maskClick : function(){
+
+					var _this = this;
+					//叉号点击方法
+					$(".title span:last").click(function(){
+						$(".mark").hide();
+					});
+					//下一张图片
+					$(".btn li:last").click(function(){
+						_this.img_index += 1;
+
+						if(_this.img_index > _this.img_pageCount - 1){
+							_this.page_index += 1;
+							_this.img_index = 0;	
+						}
+						
+						var arr = _this.filterData(_this.page_index);
+						_this.render(arr);
+						$(".imgList li").eq(_this.img_index).addClass("current").siblings().removeClass("current");
+						var img_url = $(".imgList li").eq(_this.img_index).find("img").attr("src");
+						$(".left img").attr("src",img_url);
+					});
+
+					//上一张图片
+					$(".btn li:first").click(function(){
+						_this.img_index -= 1;
+						if(_this.img_index < 0) {
+							_this.page_index -= 1;
+							//
+							if(_this.page_index < 0){
+								//
+								_this.page_index = _this.page_count - 1;
+								_this.img_index = _this.img_data.length % _this.img_pageCount - 1;
+							}else{
+								_this.img_index = _this.img_pageCount - 1;
+							}
+						}
+						var arr = _this.filterData(_this.page_index);
+						_this.render(arr);
+						$(".imgList li").eq(_this.img_index).addClass("current").siblings().removeClass("current");
+					});
+
+					//点击每一张图片的方法
+					$(".imgList").on("click","li",function(){
+						_this.img_index = $(this).index();
+						$(this).addClass("current").siblings().removeClass("current");
+						var img_url = $(this).find("img").attr("src");
+						$(".left img").attr('src',img_url);
+					});
+					//上一页
+					$("form button:first").click(function(){
+						_this.page_index -= 1;
+						if(_this.page_index < 0){
+							_this.page_index = _this.page_count -1;
+						}
+						_this.img_index = 0;
+						var arr = _this.filterData(_this.page_index);
+						_this.render(arr);
+					});
+					//下一页
+					$("form button:last").click(function(){
+						_this.page_index += 1;
+						if(_this.page_index > _this.page_count - 1){
+							_this.page_index = 0;
+						}
+						_this.img_index = 0;
+						var arr = _this.filterData(_this.page_index);
+						_this.render(arr);
+					});
+				},	
+
+				//渲染页面方法
+				render : function(arr){
+					var _this = this;
+					$(".imgList").empty();
+					$.each(arr,function(i,item){
+						if(_this.img_index == i){
+							$("<li class='current'></li>").append($("<img>").attr("src",item)).appendTo(".imgList");
+						}else{
+							$("<li></li>").append($("<img>").attr("src",item)).appendTo(".imgList");
+						}
+					});
+
+					$("form span").text(this.page_index + 1 + "/" + this.page_count);
+					var img_url = $(".imgList li").eq(this.img_index).find("img").attr('src');
+					$(".left img").attr('src',img_url);
+				},
+				//过滤数据方法
+				filterData : function(index){
+					//0  0 - 7
+					//1  8 - 15
+					//2  16 - 23
+					var arr = [];
+					var _this = this;
+					$.each(this.img_data,function(i,item){
+						if(i >= index * _this.img_pageCount && i < (index + 1) * _this.img_pageCount){
+							arr.push(item);
+						}
+					});
+					return arr;
+				}
+			}
+
+			new Img();
+				
+		});
+	</script>
+
+</body>
+
+</html>

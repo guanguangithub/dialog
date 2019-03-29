@@ -1,0 +1,118 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	box-sizing: border-box;
+}
+.wrap{
+	width: 100%;
+	height: auto;
+	position: relative;
+}
+.tit{
+	width: 500px;
+	height: auto;
+	padding: 10px 10px;
+	border: 1px solid #ccc;
+	margin-left: 30px;
+}
+.img>img{
+	width: 100%;
+	height: 300px;
+	display: block;
+}
+.mark{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 1000px;
+	background: #E0E0E0B1;
+	display: none;
+}
+.mark_1{
+	width: 800px;
+	height: auto;
+	position: absolute;
+	left: 50%;
+	top: 50px;
+	margin-left: -400px;
+	border: 1px solid #ccc; 
+	padding-bottom: 10px;
+}
+.title{
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 5px;
+	background: #E2E2E2;
+}
+.content{
+	width: 100%;
+	height: auto;
+	display: flex;
+	overflow: hidden;
+}
+.left{
+	flex: 8;
+	padding: 2px 40px;
+	height: 426px;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+}
+.left>ol{
+	width: 100%;
+	height: auto;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 5px;
+}
+.left>ol>li{
+	font-size: 50px;
+	font-family: '楷体';
+}
+.left>li>img{
+	width: 500px;
+	height: 426px;
+	display: block;
+}
+.right{
+	height: 426px;
+	flex: 2;
+	overflow: hidden;
+	position: relative;
+}
+.imgList{
+	width: 100%;
+	height: 300px;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+
+	flex-wrap: wrap;
+	border: 1px solid #ccc;
+}
+.imgList>li{
+	width: 48%;
+	padding: 5px 5px;
+}
+.imgList>li>img{
+	width: 100%;
+	height: 50px;
+	display: block;
+}
+.right>form{
+	position: absolute;
+	left: 50%;
+	margin-left: -28px;
+	bottom: 40px;
+}
+.current{
+	border: 1px solid red;
+	height: 62px;
+}
